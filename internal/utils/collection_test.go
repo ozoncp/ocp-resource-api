@@ -59,7 +59,7 @@ func errorEquals(a error, b error) bool {
 func assertSplitInt(t *testing.T, source []int, batchSize int, expectedSlice [][]int, expectedErr error) {
 	actualSlice, actualErr := SplitInt(source, batchSize)
 	if !errorEquals(actualErr, expectedErr) {
-		t.Fatalf("Error assertion failed. Actual %v. Exceptec %v", actualErr, expectedErr)
+		t.Fatalf("Error assertion failed. Actual '%v'. Expected '%v'", actualErr, expectedErr)
 	}
 	if !sliceIntIntEquals(actualSlice, expectedSlice) {
 		t.Fatalf("Assertion failed. Actual %v. Excepted %v", actualSlice, expectedSlice)
@@ -69,7 +69,7 @@ func assertSplitInt(t *testing.T, source []int, batchSize int, expectedSlice [][
 func assertFilterOut(t *testing.T, source []int, filterOutValues []int, expectedSlice []int, expectedErr error) {
 	actualSlice, actualErr := FilterOutInt(source, filterOutValues)
 	if !errorEquals(actualErr, expectedErr) {
-		t.Fatalf("Error assertion failed. Actual %v. Exceptec %v", actualErr, expectedErr)
+		t.Fatalf("Error assertion failed. Actual '%v'. Expected '%v'", actualErr, expectedErr)
 	}
 	if !sliceIntEquals(actualSlice, expectedSlice) {
 		t.Fatalf("Assertion failed. Actual %v. Excepted %v", actualSlice, expectedSlice)
@@ -79,7 +79,7 @@ func assertFilterOut(t *testing.T, source []int, filterOutValues []int, expected
 func assertMapReverseIntInt(t *testing.T, source map[int]int, rewrite bool, expectedMap map[int]int, expectedErr error) {
 	actualMap, actualErr := ReverseMapIntToInt(source, rewrite)
 	if !errorEquals(actualErr, expectedErr) {
-		t.Fatalf("Error assertion failed. Actual %v. Exceptec %v", actualErr, expectedErr)
+		t.Fatalf("Error assertion failed. Actual '%v'. Expected '%v'", actualErr, expectedErr)
 	}
 	if !mapIntIntEquals(actualMap, expectedMap) {
 		t.Fatalf("Assertion failed. Actual %v. Excepted %v", actualMap, expectedMap)
@@ -111,12 +111,12 @@ func TestFilterOutInt(t *testing.T) {
 }
 
 func TestFilterOutIntSourceNil(t *testing.T) {
-	assertFilterOut(t, nil, []int{1, 2, 3, 5}, nil, errors.New("source should be not nil"))
+	assertFilterOut(t, nil, []int{1, 2, 3, 5}, nil, errors.New("source should not be nil"))
 }
 
 func TestFilterOutIntFilterValuesNil(t *testing.T) {
 	assertFilterOut(t, []int{1, 2, 3, 5}, nil,
-		nil, errors.New("filterOutValues should be not nil"))
+		nil, errors.New("filterOutValues should not be nil"))
 }
 
 func TestReverseMapIntToInt(t *testing.T) {
@@ -124,7 +124,7 @@ func TestReverseMapIntToInt(t *testing.T) {
 }
 
 func TestReverseMapIntToIntNilMap(t *testing.T) {
-	assertMapReverseIntInt(t, nil, false, nil, errors.New("source should be not nil"))
+	assertMapReverseIntInt(t, nil, false, nil, errors.New("source should not be nil"))
 }
 
 func TestReverseMapIntToIntDuplicate(t *testing.T) {

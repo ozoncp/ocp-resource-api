@@ -15,10 +15,10 @@ func sliceContainsIn(source []int, value int) (bool, error) {
 
 func FilterOutInt(source []int, filterOutValues []int) ([]int, error) {
 	if source == nil {
-		return nil, errors.New("source should be not nil")
+		return nil, errors.New("source should not be nil")
 	}
 	if filterOutValues == nil {
-		return nil, errors.New("filterOutValues should be not nil")
+		return nil, errors.New("filterOutValues should not be nil")
 	}
 
 	result := make([]int, 0)
@@ -66,7 +66,7 @@ func calcChunkSize(source []int, batchSize int) int {
 
 func ReverseMapIntToInt(source map[int]int, forceRewrite bool) (map[int]int, error) {
 	if source == nil {
-		return nil, errors.New("source should be not nil")
+		return nil, errors.New("source should not be nil")
 	}
 	result := make(map[int]int, len(source))
 	for key, value := range source {
