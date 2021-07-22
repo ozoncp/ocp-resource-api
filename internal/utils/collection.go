@@ -20,8 +20,7 @@ func FilterOutInt(source []int, filterOutValues []int) ([]int, error) {
 	if filterOutValues == nil {
 		return nil, errors.New("filterOutValues should not be nil")
 	}
-
-	result := make([]int, 0)
+	result := make([]int, 0, len(source))
 	for i := 0; i < len(source); i++ {
 		value := source[i]
 		if contains, _ := sliceContainsIn(filterOutValues, value); !contains {
@@ -39,10 +38,10 @@ func SplitInt(source []int, batchSize int) ([][]int, error) {
 		return nil, errors.New("source should not be nil")
 	}
 	batchCount := calcChunkSize(source, batchSize)
-	result := make([][]int, batchCount)
+	result := make([][]int, 0, batchCount)
 	for i := 0; i < batchCount; i++ {
 		start, end := batchBounds(len(source), batchSize, i)
-		result[i] = source[start:end]
+		result = append(result, source[start:end])
 	}
 	return result, nil
 }
