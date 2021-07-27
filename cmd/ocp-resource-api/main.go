@@ -10,17 +10,17 @@ func main() {
 
 	OpenFile := func(filename string) (err error) {
 		file, err := os.Open(filename)
+		if err != nil {
+			return
+		}
 		defer func() {
-			if file == nil {
-				return
-			}
 			fileCloseErr := file.Close()
-			if err == nil && fileCloseErr != nil {
+			if fileCloseErr != nil {
 				fmt.Printf("Error during file closing %v: %v\n", filename, err)
 				err = fileCloseErr
-			} else {
-				fmt.Printf("Closed file %v\n", filename)
+				return
 			}
+			fmt.Printf("Closed file %v\n", filename)
 		}()
 		return
 	}
@@ -31,8 +31,8 @@ func main() {
 	for _, configFileName := range configFiles {
 		if configFileErr := OpenFile(configFileName); configFileErr != nil {
 			fmt.Printf("Error during opening config file %v: %v\n", configFileName, configFileErr)
-		} else {
-			fmt.Printf("Success opening of file %v\n", configFileName)
+			continue
 		}
+		fmt.Printf("Success opening of file %v\n", configFileName)
 	}
 }
