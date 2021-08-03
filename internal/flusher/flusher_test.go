@@ -41,25 +41,24 @@ var _ = Describe("Flusher", func() {
 		It("Valid two chunks", func() {
 			mockRepo.EXPECT().AddEntities(gomock.Eq(args[0:2])).Times(1)
 			mockRepo.EXPECT().AddEntities(gomock.Eq(args[2:])).Times(1)
-			_, _ = flusher.Flush(args)
+			actual := flusher.Flush(args)
+			gomega.Expect(actual).Should(gomega.BeEmpty())
 		})
 
 		Describe("Failures", func() {
 			It("Fail on first chunk", func() {
 				ErrNetwork := errors.New("network error")
 				mockRepo.EXPECT().AddEntities(gomock.Eq(args[0:2])).Return(ErrNetwork)
-				actual, actualErr := flusher.Flush(args)
+				actual := flusher.Flush(args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args))
-				gomega.Expect(actualErr).Should(gomega.MatchError(ErrNetwork))
 			})
 
 			It("Fail on second chunk", func() {
 				ErrNetwork := errors.New("network error")
 				mockRepo.EXPECT().AddEntities(gomock.Eq(args[0:2])).Times(1)
 				mockRepo.EXPECT().AddEntities(gomock.Eq(args[2:])).Return(ErrNetwork)
-				actual, actualErr := flusher.Flush(args)
+				actual := flusher.Flush(args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args[2:]))
-				gomega.Expect(actualErr).Should(gomega.MatchError(ErrNetwork))
 			})
 		})
 	})
@@ -78,16 +77,16 @@ var _ = Describe("Flusher", func() {
 
 		It("Valid single chunks", func() {
 			mockRepo.EXPECT().AddEntities(gomock.Eq(args)).Times(1)
-			_, _ = flusher.Flush(args)
+			actual := flusher.Flush(args)
+			gomega.Expect(actual).Should(gomega.BeEmpty())
 		})
 
 		Describe("Failures", func() {
 			It("Fail on first chunk", func() {
 				ErrNetwork := errors.New("network error")
 				mockRepo.EXPECT().AddEntities(gomock.Eq(args)).Return(ErrNetwork)
-				actual, actualErr := flusher.Flush(args)
+				actual := flusher.Flush(args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args))
-				gomega.Expect(actualErr).Should(gomega.MatchError(ErrNetwork))
 			})
 		})
 	})
