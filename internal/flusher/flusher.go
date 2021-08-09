@@ -30,13 +30,15 @@ func (f *flusher) Flush(resources []models.Resource) []models.Resource {
 	if f.resourceRepo == nil {
 		return resources
 	}
-
+	if len(resources) == 0 {
+		return resources
+	}
 	chunks, err := utils.SplitToBulksResource(resources, f.chunkSize)
 	if err != nil {
 		return resources
 	}
 
-	for i, _ := range chunks {
+	for i := range chunks {
 		chunk := chunks[i]
 		errAddEntities := f.resourceRepo.AddEntities(chunk)
 		if errAddEntities != nil {
