@@ -27,26 +27,23 @@ type saver struct {
 }
 
 func (s *saver) Save(entity models.Resource) {
-	if !s.initiated {
-		panic("saver must be initiated")
-	}
-	if s.closed {
-		panic("saver has been closed")
-	}
+	assertIsReady(s)
 	s.saveChan <- entity
 }
 
 func (s *saver) Close() {
-	assertIsInitiated(s)
+	assertIsReady(s)
 	s.closed = true
-	s.closeChan <- struct{}{}
 	close(s.closeChan)
 	s.wait.Wait()
 }
 
-func assertIsInitiated(s *saver) {
+func assertIsReady(s *saver) {
 	if !s.initiated {
 		panic("saver must be initiated")
+	}
+	if s.closed {
+		panic("saver must not be closed")
 	}
 }
 
