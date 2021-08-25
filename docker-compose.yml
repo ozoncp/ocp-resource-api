@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ocp
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ocp_resource
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 15432:5432
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: "postgresql://ocp:postgres@db/ocp_resource"
+    ports:
+      - "7070:7070"
+      - "7072:7072"
+    depends_on:
+      - db
+volumes:
+  pgdata:

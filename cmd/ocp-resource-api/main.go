@@ -5,11 +5,13 @@ import (
 	"flag"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	api "github.com/ozoncp/ocp-resource-api/internal/api"
+	"github.com/ozoncp/ocp-resource-api/internal/repo"
 	desc "github.com/ozoncp/ocp-resource-api/pkg/ocp-resource-api"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"net"
 	"net/http"
+	"os"
 )
 
 const (
@@ -34,9 +36,18 @@ func runGrpcServer() error {
 		}
 	}(l)
 
-	grpcServer := grpc.NewServer()
+	db_url := os.Getenv("DB_URL")
+	if db_url == "" {
+		log.Fatal().Msgf("DB_URL environment variable should be defined")
+	}
 
-	desc.RegisterOcpResourceApiServer(grpcServer, api.NewOcpResourceApi())
+	grpcServer := grpc.NewServer()
+	resourceRepo := repo.NewRepoPostgreSQL(db_url)
+	resourceApi, err := api.NewOcpResourceApi(&resourceRepo)
+	if err != nil {
+		panic(err)
+	}
+	desc.RegisterOcpResourceApiServer(grpcServer, resourceApi)
 	log.Info().Msgf("Started grpc server on %s", *grpcEndpoint)
 
 	if err := grpcServer.Serve(l); err != nil {

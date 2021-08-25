@@ -10,7 +10,7 @@ test:
 	go test -v ./...
 
 .PHONY: build
-build: vendor-proto .generate .build
+build: vendor-proto .generate .goose-build .build
 
 .PHONY: .generate
 .generate:
@@ -28,6 +28,10 @@ build: vendor-proto .generate .build
 		mv pkg/ocp-resource-api/github.com/ozoncp/ocp-resource-api/api/ocp-resource-api/* pkg/ocp-resource-api/
 		rm -rf pkg/ocp-resource-api/github.com
 		mkdir -p cmd/ocp-resource-api
+
+.PHONY: .goose-build
+.goose-build:
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -o ./.bin/ocp-resource-migration ./cmd/migration/main.go
 
 .PHONY: .build
 .build:
@@ -71,13 +75,17 @@ install-go-deps: .install-go-deps
 .PHONY: .install-go-deps
 .install-go-deps:
 		ls go.mod || go mod init
+		go get -u github.com/pressly/goose/v3/cmd/goose
 		go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 		go get -u github.com/golang/protobuf/proto
 		go get -u github.com/golang/protobuf/protoc-gen-go
 		go get -u google.golang.org/grpc
 		go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+		go get -u github.com/jackc/pgx/v4
 		go get -u github.com/envoyproxy/protoc-gen-validate
 		go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 		go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 		go install github.com/envoyproxy/protoc-gen-validate
 		go get -u github.com/rs/zerolog
+		go get -u github.com/Masterminds/squirrel
+		go mod tidy
