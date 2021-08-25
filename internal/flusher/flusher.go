@@ -40,7 +40,7 @@ func (f *flusher) Flush(resources []models.Resource) []models.Resource {
 
 	for i := range chunks {
 		chunk := chunks[i]
-		errAddEntities := f.resourceRepo.AddEntities(chunk)
+		errAddEntities := f.resourceRepo.AddEntities(nil, chunk)
 		if errAddEntities != nil {
 			return resources[int(f.chunkSize)*i:]
 		}

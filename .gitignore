@@ -15,3 +15,5 @@
 # vendor.protogen/
 .idea
 vendor.protogen
+
+.bin

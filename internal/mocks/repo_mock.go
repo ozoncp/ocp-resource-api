@@ -35,17 +35,33 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 }
 
 // AddEntities mocks base method.
-func (m *MockRepo) AddEntities(arg0 []models.Resource) error {
+func (m *MockRepo) AddEntities(arg0 []models.Resource) ([]models.Resource, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddEntities", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].([]models.Resource)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddEntities indicates an expected call of AddEntities.
 func (mr *MockRepoMockRecorder) AddEntities(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEntities", reflect.TypeOf((*MockRepo)(nil).AddEntities), arg0)
+}
+
+// AddEntity mocks base method.
+func (m *MockRepo) AddEntity(arg0 models.Resource) (models.Resource, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddEntity", arg0)
+	ret0, _ := ret[0].(models.Resource)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddEntity indicates an expected call of AddEntity.
+func (mr *MockRepoMockRecorder) AddEntity(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEntity", reflect.TypeOf((*MockRepo)(nil).AddEntity), arg0)
 }
 
 // DescribeEntity mocks base method.
@@ -76,4 +92,18 @@ func (m *MockRepo) ListEntities(arg0, arg1 uint64) ([]models.Resource, error) {
 func (mr *MockRepoMockRecorder) ListEntities(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEntities", reflect.TypeOf((*MockRepo)(nil).ListEntities), arg0, arg1)
+}
+
+// RemoveEntity mocks base method.
+func (m *MockRepo) RemoveEntity(arg0 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveEntity", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveEntity indicates an expected call of RemoveEntity.
+func (mr *MockRepoMockRecorder) RemoveEntity(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveEntity", reflect.TypeOf((*MockRepo)(nil).RemoveEntity), arg0)
 }

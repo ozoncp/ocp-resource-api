@@ -2,44 +2,71 @@ package api
 
 import (
 	"context"
+	"fmt"
+	"github.com/ozoncp/ocp-resource-api/internal/models"
+	"github.com/ozoncp/ocp-resource-api/internal/repo"
 	desc "github.com/ozoncp/ocp-resource-api/pkg/ocp-resource-api"
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-const (
-	errEndpointNotFound = "endpoint not found"
-)
-
+//TODO add a tests as improvements
 type api struct {
 	desc.UnimplementedOcpResourceApiServer
+	repo repo.Repo
 }
 
-func (api) CreateResourceV1(_ context.Context, _ *desc.CreateResourceRequestV1) (*desc.ResourceV1, error) {
-	log.Warn().Msgf("Requested not implemented method: CreateResourceV1")
-	err := status.Error(codes.NotFound, errEndpointNotFound)
-	return nil, err
+func (a *api) CreateResourceV1(ctx context.Context, req *desc.CreateResourceRequestV1) (*desc.ResourceV1, error) {
+	createdResource, err := a.repo.AddEntity(ctx, models.NewResourceNotPersisted(req.GetUserId(), req.GetType(), req.GetStatus()))
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
+	}
+	rsp := mapResourceToResourceV1(createdResource)
+	return rsp, nil
 }
 
-func (_ *api) DescribeResourceV1(_ context.Context, _ *desc.DescribeResourceRequestV1) (*desc.ResourceV1, error) {
-	log.Warn().Msgf("Requested not implemented method: DescribeResourceV1")
-	err := status.Error(codes.NotFound, errEndpointNotFound)
-	return nil, err
+func (a *api) DescribeResourceV1(ctx context.Context, req *desc.DescribeResourceRequestV1) (*desc.ResourceV1, error) {
+	resource, err := a.repo.DescribeEntity(ctx, req.GetResourceId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
+	}
+	rsp := mapResourceToResourceV1(resource)
+	return rsp, nil
 }
 
-func (_ *api) ListResourcesV1(_ context.Context, _ *desc.ListResourcesRequestV1) (*desc.ListResourcesResponseV1, error) {
-	log.Warn().Msgf("Requested not implemented method: ListResourcesV1")
-	err := status.Error(codes.NotFound, errEndpointNotFound)
-	return nil, err
+func (a *api) ListResourcesV1(ctx context.Context, req *desc.ListResourcesRequestV1) (*desc.ListResourcesResponseV1, error) {
+	resourcesPtr, err := a.repo.ListEntities(ctx, req.GetLimit(), req.GetOffset())
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
+	}
+	resources := *resourcesPtr
+	resourcesV1Slice := make([]*desc.ResourceV1, 0, len(resources))
+	for i := range resources {
+		resourcesV1Slice = append(resourcesV1Slice, mapResourceToResourceV1(&resources[i]))
+	}
+	rsp := desc.ListResourcesResponseV1{Resources: resourcesV1Slice}
+	return &rsp, nil
 }
 
-func (_ *api) RemoveResourceV1(_ context.Context, _ *desc.RemoveResourceRequestV1) (*desc.RemoveResourceResponseV1, error) {
-	log.Warn().Msgf("Requested not implemented method: RemoveResourceV1")
-	err := status.Error(codes.NotFound, errEndpointNotFound)
-	return nil, err
+func (a *api) RemoveResourceV1(ctx context.Context, req *desc.RemoveResourceRequestV1) (*desc.RemoveResourceResponseV1, error) {
+	err := a.repo.RemoveEntity(ctx, req.GetResourceId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
+	}
+	rsp := desc.RemoveResourceResponseV1{}
+	return &rsp, nil
 }
 
-func NewOcpResourceApi() desc.OcpResourceApiServer {
-	return &api{}
+func mapResourceToResourceV1(resource *models.Resource) *desc.ResourceV1 {
+	res := desc.ResourceV1{
+		Id:     resource.Id,
+		UserId: resource.UserId,
+		Type:   resource.Type,
+		Status: resource.Status,
+	}
+	return &res
+}
+
+func NewOcpResourceApi(repo *repo.Repo) (desc.OcpResourceApiServer, error) {
+	return &api{repo: *repo}, nil
 }
