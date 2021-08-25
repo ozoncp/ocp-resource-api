@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+package ocp.resource.api;
+
+option go_package = "github.com/ozoncp/ocp-resource-api/api/ocp-resource-api;ocp_resource_api";
+
+message ResourceV1 {
+  uint64 id = 1;
+  uint64 user_id = 2;
+  uint64 type = 3;
+  uint64 status = 4;
+}
+
+message CreateResourceRequestV1 {
+  uint64 user_id = 1;
+  uint64 type = 2;
+  uint64 status = 3;
+}
+
+message CreateResourceResponseV1 {
+  uint64 id = 1;
+  uint64 user_id = 2;
+  uint64 type = 3;
+  uint64 status = 4;
+}
+
+message DescribeResourceRequestV1 {
+  uint64 resource_id = 1;
+}
+
+message ListResourcesRequestV1 {
+  uint64 limit = 1;
+  uint64 offset = 2;
+}
+
+message ListResourcesResponseV1 {
+  repeated ResourceV1 resources = 1;
+}
+
+message RemoveResourceRequestV1 {
+  uint64 resource_id = 1;
+}
+
+message RemoveResourceResponseV1 {
+}
+
+service OcpResourceApi {
+
+  // Return list of resource
+  rpc CreateResourceV1(CreateResourceRequestV1) returns (ResourceV1) {
+    option (google.api.http) = {
+      post: "/v1/resources"
+      body: "*"
+    };
+  }
+
+  // Return description of resource by id
+  rpc DescribeResourceV1(DescribeResourceRequestV1) returns (ResourceV1) {
+    option (google.api.http) = {
+      get: "/v1/resources/{resource_id}"
+    };
+  }
+
+  // Сreate new resource
+  rpc ListResourcesV1(ListResourcesRequestV1) returns (ListResourcesResponseV1) {
+    option (google.api.http) = {
+      get: "/v1/resources"
+    };
+  }
+
+  // Сreate few new resources
+  rpc RemoveResourceV1(RemoveResourceRequestV1) returns (RemoveResourceResponseV1) {
+    option (google.api.http) = {
+      delete: "/v1/resources/{resource_id}"
+    };
+  }
+}
+
