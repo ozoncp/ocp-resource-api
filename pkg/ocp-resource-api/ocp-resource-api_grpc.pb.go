@@ -24,8 +24,11 @@ type OcpResourceApiClient interface {
 	DescribeResourceV1(ctx context.Context, in *DescribeResourceRequestV1, opts ...grpc.CallOption) (*ResourceV1, error)
 	// Сreate new resource
 	ListResourcesV1(ctx context.Context, in *ListResourcesRequestV1, opts ...grpc.CallOption) (*ListResourcesResponseV1, error)
-	// Сreate few new resources
 	RemoveResourceV1(ctx context.Context, in *RemoveResourceRequestV1, opts ...grpc.CallOption) (*RemoveResourceResponseV1, error)
+	// Update few new respirce
+	UpdateResourceV1(ctx context.Context, in *UpdateResourceRequestV1, opts ...grpc.CallOption) (*ResourceV1, error)
+	// Update few new respirce
+	MultiCreateResourcesV1(ctx context.Context, in *MultiCreateResourceRequestV1, opts ...grpc.CallOption) (*MultiCreateResourceResponseV1, error)
 }
 
 type ocpResourceApiClient struct {
@@ -72,6 +75,24 @@ func (c *ocpResourceApiClient) RemoveResourceV1(ctx context.Context, in *RemoveR
 	return out, nil
 }
 
+func (c *ocpResourceApiClient) UpdateResourceV1(ctx context.Context, in *UpdateResourceRequestV1, opts ...grpc.CallOption) (*ResourceV1, error) {
+	out := new(ResourceV1)
+	err := c.cc.Invoke(ctx, "/ocp.resource.api.OcpResourceApi/UpdateResourceV1", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ocpResourceApiClient) MultiCreateResourcesV1(ctx context.Context, in *MultiCreateResourceRequestV1, opts ...grpc.CallOption) (*MultiCreateResourceResponseV1, error) {
+	out := new(MultiCreateResourceResponseV1)
+	err := c.cc.Invoke(ctx, "/ocp.resource.api.OcpResourceApi/MultiCreateResourcesV1", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OcpResourceApiServer is the server API for OcpResourceApi service.
 // All implementations must embed UnimplementedOcpResourceApiServer
 // for forward compatibility
@@ -82,8 +103,11 @@ type OcpResourceApiServer interface {
 	DescribeResourceV1(context.Context, *DescribeResourceRequestV1) (*ResourceV1, error)
 	// Сreate new resource
 	ListResourcesV1(context.Context, *ListResourcesRequestV1) (*ListResourcesResponseV1, error)
-	// Сreate few new resources
 	RemoveResourceV1(context.Context, *RemoveResourceRequestV1) (*RemoveResourceResponseV1, error)
+	// Update few new respirce
+	UpdateResourceV1(context.Context, *UpdateResourceRequestV1) (*ResourceV1, error)
+	// Update few new respirce
+	MultiCreateResourcesV1(context.Context, *MultiCreateResourceRequestV1) (*MultiCreateResourceResponseV1, error)
 	mustEmbedUnimplementedOcpResourceApiServer()
 }
 
@@ -102,6 +126,12 @@ func (UnimplementedOcpResourceApiServer) ListResourcesV1(context.Context, *ListR
 }
 func (UnimplementedOcpResourceApiServer) RemoveResourceV1(context.Context, *RemoveResourceRequestV1) (*RemoveResourceResponseV1, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveResourceV1 not implemented")
+}
+func (UnimplementedOcpResourceApiServer) UpdateResourceV1(context.Context, *UpdateResourceRequestV1) (*ResourceV1, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResourceV1 not implemented")
+}
+func (UnimplementedOcpResourceApiServer) MultiCreateResourcesV1(context.Context, *MultiCreateResourceRequestV1) (*MultiCreateResourceResponseV1, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultiCreateResourcesV1 not implemented")
 }
 func (UnimplementedOcpResourceApiServer) mustEmbedUnimplementedOcpResourceApiServer() {}
 
@@ -188,6 +218,42 @@ func _OcpResourceApi_RemoveResourceV1_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OcpResourceApi_UpdateResourceV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateResourceRequestV1)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OcpResourceApiServer).UpdateResourceV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ocp.resource.api.OcpResourceApi/UpdateResourceV1",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OcpResourceApiServer).UpdateResourceV1(ctx, req.(*UpdateResourceRequestV1))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OcpResourceApi_MultiCreateResourcesV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MultiCreateResourceRequestV1)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OcpResourceApiServer).MultiCreateResourcesV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ocp.resource.api.OcpResourceApi/MultiCreateResourcesV1",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OcpResourceApiServer).MultiCreateResourcesV1(ctx, req.(*MultiCreateResourceRequestV1))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OcpResourceApi_ServiceDesc is the grpc.ServiceDesc for OcpResourceApi service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +276,14 @@ var OcpResourceApi_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveResourceV1",
 			Handler:    _OcpResourceApi_RemoveResourceV1_Handler,
+		},
+		{
+			MethodName: "UpdateResourceV1",
+			Handler:    _OcpResourceApi_UpdateResourceV1_Handler,
+		},
+		{
+			MethodName: "MultiCreateResourcesV1",
+			Handler:    _OcpResourceApi_MultiCreateResourcesV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

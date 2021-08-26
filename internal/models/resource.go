@@ -18,7 +18,7 @@ func NewResource(id uint64, userId uint64, resourceType uint64, status uint64) R
 	}
 }
 
-func NewResourceNotPersisted(userId uint64, resourceType uint64, status uint64) Resource {
+func NewNotPersistedResource(userId uint64, resourceType uint64, status uint64) Resource {
 	return Resource{
 		UserId: userId,
 		Type:   resourceType,

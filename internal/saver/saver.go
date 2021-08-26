@@ -76,7 +76,7 @@ func (s *saver) Init() {
 
 func (s *saver) flush() {
 	fmt.Printf("Flush entities %v\n", s.entities)
-	notFlushedEntities := s.flusher.Flush(s.entities)
+	notFlushedEntities := s.flusher.Flush(nil, s.entities, nil)
 	if len(notFlushedEntities) != 0 {
 		s.entities = notFlushedEntities
 		fmt.Printf(

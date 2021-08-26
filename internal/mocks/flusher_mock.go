@@ -5,9 +5,11 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	opentracing "github.com/opentracing/opentracing-go"
 	models "github.com/ozoncp/ocp-resource-api/internal/models"
 )
 
@@ -35,15 +37,15 @@ func (m *MockFlusher) EXPECT() *MockFlusherMockRecorder {
 }
 
 // Flush mocks base method.
-func (m *MockFlusher) Flush(arg0 []models.Resource) []models.Resource {
+func (m *MockFlusher) Flush(arg0 context.Context, arg1 []models.Resource, arg2 opentracing.Span) []models.Resource {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Flush", arg0)
+	ret := m.ctrl.Call(m, "Flush", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]models.Resource)
 	return ret0
 }
 
 // Flush indicates an expected call of Flush.
-func (mr *MockFlusherMockRecorder) Flush(arg0 interface{}) *gomock.Call {
+func (mr *MockFlusherMockRecorder) Flush(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockFlusher)(nil).Flush), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockFlusher)(nil).Flush), arg0, arg1, arg2)
 }
