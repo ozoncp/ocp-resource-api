@@ -46,6 +46,25 @@ message RemoveResourceRequestV1 {
 message RemoveResourceResponseV1 {
 }
 
+message MultiCreateResourceRequestV1 {
+  repeated CreateResourceRequestV1 resources = 1;
+}
+
+message MultiCreateResourceResponseV1 {
+  uint64 added = 1;
+}
+
+message UpdateResourceRequestV1 {
+  uint64 id = 1;
+  UpdateResourceFieldsV1 fields = 2;
+}
+
+message UpdateResourceFieldsV1 {
+  uint64 user_id = 2;
+  uint64 type = 3;
+  uint64 status = 4;
+}
+
 service OcpResourceApi {
 
   // Return list of resource
@@ -70,10 +89,25 @@ service OcpResourceApi {
     };
   }
 
-  // Сreate few new resources
   rpc RemoveResourceV1(RemoveResourceRequestV1) returns (RemoveResourceResponseV1) {
     option (google.api.http) = {
       delete: "/v1/resources/{resource_id}"
+    };
+  }
+
+  // Update few new respirce
+  rpc UpdateResourceV1(UpdateResourceRequestV1) returns (ResourceV1) {
+    option (google.api.http) = {
+      put: "/v1/resources/{id}"
+      body: "fields"
+    };
+  }
+
+  // Update few new respirce
+  rpc MultiCreateResourcesV1(MultiCreateResourceRequestV1) returns (MultiCreateResourceResponseV1) {
+    option (google.api.http) = {
+      post: "/v1/resources/batch"
+      body: "*"
     };
   }
 }

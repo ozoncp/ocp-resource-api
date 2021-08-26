@@ -610,3 +610,308 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RemoveResourceResponseV1ValidationError{}
+
+// Validate checks the field values on MultiCreateResourceRequestV1 with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *MultiCreateResourceRequestV1) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetResources() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MultiCreateResourceRequestV1ValidationError{
+					field:  fmt.Sprintf("Resources[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MultiCreateResourceRequestV1ValidationError is the validation error returned
+// by MultiCreateResourceRequestV1.Validate if the designated constraints
+// aren't met.
+type MultiCreateResourceRequestV1ValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MultiCreateResourceRequestV1ValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MultiCreateResourceRequestV1ValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MultiCreateResourceRequestV1ValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MultiCreateResourceRequestV1ValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MultiCreateResourceRequestV1ValidationError) ErrorName() string {
+	return "MultiCreateResourceRequestV1ValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MultiCreateResourceRequestV1ValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMultiCreateResourceRequestV1.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MultiCreateResourceRequestV1ValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MultiCreateResourceRequestV1ValidationError{}
+
+// Validate checks the field values on MultiCreateResourceResponseV1 with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *MultiCreateResourceResponseV1) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Added
+
+	return nil
+}
+
+// MultiCreateResourceResponseV1ValidationError is the validation error
+// returned by MultiCreateResourceResponseV1.Validate if the designated
+// constraints aren't met.
+type MultiCreateResourceResponseV1ValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MultiCreateResourceResponseV1ValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MultiCreateResourceResponseV1ValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MultiCreateResourceResponseV1ValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MultiCreateResourceResponseV1ValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MultiCreateResourceResponseV1ValidationError) ErrorName() string {
+	return "MultiCreateResourceResponseV1ValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MultiCreateResourceResponseV1ValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMultiCreateResourceResponseV1.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MultiCreateResourceResponseV1ValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MultiCreateResourceResponseV1ValidationError{}
+
+// Validate checks the field values on UpdateResourceRequestV1 with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateResourceRequestV1) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Id
+
+	if v, ok := interface{}(m.GetFields()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateResourceRequestV1ValidationError{
+				field:  "Fields",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// UpdateResourceRequestV1ValidationError is the validation error returned by
+// UpdateResourceRequestV1.Validate if the designated constraints aren't met.
+type UpdateResourceRequestV1ValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateResourceRequestV1ValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateResourceRequestV1ValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateResourceRequestV1ValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateResourceRequestV1ValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateResourceRequestV1ValidationError) ErrorName() string {
+	return "UpdateResourceRequestV1ValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateResourceRequestV1ValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateResourceRequestV1.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateResourceRequestV1ValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateResourceRequestV1ValidationError{}
+
+// Validate checks the field values on UpdateResourceFieldsV1 with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateResourceFieldsV1) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for UserId
+
+	// no validation rules for Type
+
+	// no validation rules for Status
+
+	return nil
+}
+
+// UpdateResourceFieldsV1ValidationError is the validation error returned by
+// UpdateResourceFieldsV1.Validate if the designated constraints aren't met.
+type UpdateResourceFieldsV1ValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateResourceFieldsV1ValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateResourceFieldsV1ValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateResourceFieldsV1ValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateResourceFieldsV1ValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateResourceFieldsV1ValidationError) ErrorName() string {
+	return "UpdateResourceFieldsV1ValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateResourceFieldsV1ValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateResourceFieldsV1.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateResourceFieldsV1ValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateResourceFieldsV1ValidationError{}
