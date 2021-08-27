@@ -1,11 +1,13 @@
 package saver
 
 import (
+	"context"
 	"fmt"
-	"github.com/ozoncp/ocp-resource-api/internal/flusher"
-	"github.com/ozoncp/ocp-resource-api/internal/models"
 	"sync"
 	"time"
+
+	"github.com/ozoncp/ocp-resource-api/internal/flusher"
+	"github.com/ozoncp/ocp-resource-api/internal/models"
 )
 
 type Saver interface {
@@ -76,7 +78,7 @@ func (s *saver) Init() {
 
 func (s *saver) flush() {
 	fmt.Printf("Flush entities %v\n", s.entities)
-	notFlushedEntities := s.flusher.Flush(nil, s.entities, nil)
+	notFlushedEntities := s.flusher.Flush(context.Background(), s.entities)
 	if len(notFlushedEntities) != 0 {
 		s.entities = notFlushedEntities
 		fmt.Printf(

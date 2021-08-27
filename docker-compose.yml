@@ -13,17 +13,18 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - 15432:5432
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    environment:
-#      DB_URL: "postgresql://ocp:postgres@db/ocp_resource"
-#    ports:
-#      - "7070:7070"
-#      - "7072:7072"
-#    depends_on:
-#      - db
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: "postgresql://ocp:postgres@db/ocp_resource"
+    ports:
+      - "7070:7070"
+      - "7072:7072"
+    depends_on:
+      - db
+      - kafka
   zookeeper:
     image: confluentinc/cp-zookeeper
     ports:
@@ -33,18 +34,6 @@ services:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_SYNC_LIMIT: 2
-  kafka-ui:
-    image: obsidiandynamics/kafdrop:latest
-    depends_on:
-      - kafka
-    links:
-      - kafka:kafka
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka:9092"
-      JVM_OPTS: "-Xms32M -Xmx64M"
-      SERVER_SERVLET_CONTEXTPATH: "/"
   kafka:
     image: confluentinc/cp-kafka
     depends_on:
@@ -60,11 +49,16 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   prometheus:
     image: prom/prometheus
-#    links:
-#      - app:app
+    links:
+      - app:app
     ports:
       - "9090:9090"
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - '6831:6831/udp'
+      - '16686:16686'
 volumes:
   pgdata:

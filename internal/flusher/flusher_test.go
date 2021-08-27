@@ -2,6 +2,7 @@ package flusher_test
 
 import (
 	"errors"
+
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -42,25 +43,25 @@ var _ = Describe("Flusher", func() {
 		})
 
 		It("Valid two chunks", func() {
-			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2]), nil).Times(1)
-			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[2:]), nil).Times(1)
-			actual := flusher.Flush(ctx, args, nil)
+			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2])).Times(1)
+			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[2:])).Times(1)
+			actual := flusher.Flush(ctx, args)
 			gomega.Expect(actual).Should(gomega.BeEmpty())
 		})
 
 		Describe("Failures", func() {
 			It("Fail on first chunk", func() {
 				ErrNetwork := errors.New("network error")
-				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2]), nil).Return(ErrNetwork)
-				actual := flusher.Flush(ctx, args, nil)
+				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2])).Return(ErrNetwork)
+				actual := flusher.Flush(ctx, args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args))
 			})
 
 			It("Fail on second chunk", func() {
 				ErrNetwork := errors.New("network error")
-				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2]), nil).Times(1)
-				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[2:]), nil).Return(ErrNetwork)
-				actual := flusher.Flush(ctx, args, nil)
+				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[0:2])).Times(1)
+				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args[2:])).Return(ErrNetwork)
+				actual := flusher.Flush(ctx, args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args[2:]))
 			})
 		})
@@ -79,16 +80,16 @@ var _ = Describe("Flusher", func() {
 		})
 
 		It("Valid single chunks", func() {
-			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args), nil).Times(1)
-			actual := flusher.Flush(ctx, args, nil)
+			mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args)).Times(1)
+			actual := flusher.Flush(ctx, args)
 			gomega.Expect(actual).Should(gomega.BeEmpty())
 		})
 
 		Describe("Failures", func() {
 			It("Fail on first chunk", func() {
 				ErrNetwork := errors.New("network error")
-				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args), nil).Return(ErrNetwork)
-				actual := flusher.Flush(ctx, args, nil)
+				mockRepo.EXPECT().AddEntities(ctx, gomock.Eq(args)).Return(ErrNetwork)
+				actual := flusher.Flush(ctx, args)
 				gomega.Expect(actual).Should(gomega.BeEquivalentTo(args))
 			})
 		})

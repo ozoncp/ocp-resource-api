@@ -78,15 +78,15 @@ func request_OcpResourceApi_DescribeResourceV1_0(ctx context.Context, marshaler 
 		_   = err
 	)
 
-	val, ok = pathParams["resource_id"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ResourceId, err = runtime.Uint64(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := client.DescribeResourceV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -105,15 +105,15 @@ func local_request_OcpResourceApi_DescribeResourceV1_0(ctx context.Context, mars
 		_   = err
 	)
 
-	val, ok = pathParams["resource_id"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ResourceId, err = runtime.Uint64(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := server.DescribeResourceV1(ctx, &protoReq)
@@ -168,15 +168,15 @@ func request_OcpResourceApi_RemoveResourceV1_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["resource_id"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ResourceId, err = runtime.Uint64(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := client.RemoveResourceV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -195,15 +195,15 @@ func local_request_OcpResourceApi_RemoveResourceV1_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["resource_id"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ResourceId, err = runtime.Uint64(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := server.RemoveResourceV1(ctx, &protoReq)
@@ -626,11 +626,11 @@ func RegisterOcpResourceApiHandlerClient(ctx context.Context, mux *runtime.Serve
 var (
 	pattern_OcpResourceApi_CreateResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "resources"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_OcpResourceApi_DescribeResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resources", "resource_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_OcpResourceApi_DescribeResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resources", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_OcpResourceApi_ListResourcesV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "resources"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_OcpResourceApi_RemoveResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resources", "resource_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_OcpResourceApi_RemoveResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resources", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_OcpResourceApi_UpdateResourceV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resources", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 

@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/opentracing/opentracing-go"
 	"github.com/ozoncp/ocp-resource-api/internal/flusher"
 	"github.com/ozoncp/ocp-resource-api/internal/metrics"
@@ -13,7 +15,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 const chunkSize = 10
@@ -39,7 +40,7 @@ func (a *api) CreateResourceV1(ctx context.Context, req *desc.CreateResourceRequ
 
 func (a *api) DescribeResourceV1(ctx context.Context, req *desc.DescribeResourceRequestV1) (*desc.ResourceV1, error) {
 	a.notifyProducer(ctx, "get")
-	resource, err := a.repo.DescribeEntity(ctx, req.GetResourceId())
+	resource, err := a.repo.DescribeEntity(ctx, req.GetId())
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
 	}
@@ -49,11 +50,10 @@ func (a *api) DescribeResourceV1(ctx context.Context, req *desc.DescribeResource
 
 func (a *api) ListResourcesV1(ctx context.Context, req *desc.ListResourcesRequestV1) (*desc.ListResourcesResponseV1, error) {
 	a.notifyProducer(ctx, "list")
-	resourcesPtr, err := a.repo.ListEntities(ctx, req.GetLimit(), req.GetOffset())
+	resources, err := a.repo.ListEntities(ctx, req.GetLimit(), req.GetOffset())
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
 	}
-	resources := *resourcesPtr
 	resourcesV1Slice := make([]*desc.ResourceV1, 0, len(resources))
 	for i := range resources {
 		resourcesV1Slice = append(resourcesV1Slice, mapResourceToResourceV1(&resources[i]))
@@ -64,7 +64,7 @@ func (a *api) ListResourcesV1(ctx context.Context, req *desc.ListResourcesReques
 
 func (a *api) RemoveResourceV1(ctx context.Context, req *desc.RemoveResourceRequestV1) (*desc.RemoveResourceResponseV1, error) {
 	a.notifyProducer(ctx, "remove")
-	err := a.repo.RemoveEntity(ctx, req.GetResourceId())
+	err := a.repo.RemoveEntity(ctx, req.GetId())
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("request err: %v", err))
 	}
@@ -82,13 +82,13 @@ func (a *api) MultiCreateResourcesV1(ctx context.Context, req *desc.MultiCreateR
 	for i, res := range req.GetResources() {
 		resources[i] = models.NewNotPersistedResource(res.UserId, res.Type, res.Status)
 	}
-
-	notSaved := a.flusher.Flush(ctx, resources, span)
+	ctx = opentracing.ContextWithSpan(ctx, span)
+	notSaved := a.flusher.Flush(ctx, resources)
 	if len(notSaved) != 0 {
 		return nil, status.Error(codes.Internal, fmt.Sprint("flush err"))
 	}
 	rsp := desc.MultiCreateResourceResponseV1{}
-	for _ = range resources {
+	for range resources {
 		metrics.IncReqCounter("add")
 	}
 	return &rsp, nil

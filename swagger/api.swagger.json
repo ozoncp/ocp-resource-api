@@ -115,6 +115,65 @@
       }
     },
     "/v1/resources/{id}": {
+      "get": {
+        "summary": "Return description of resource by id",
+        "operationId": "OcpResourceApi_DescribeResourceV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiResourceV1"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpResourceApi"
+        ]
+      },
+      "delete": {
+        "operationId": "OcpResourceApi_RemoveResourceV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRemoveResourceResponseV1"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpResourceApi"
+        ]
+      },
       "put": {
         "summary": "Update few new respirce",
         "operationId": "OcpResourceApi_UpdateResourceV1",
@@ -147,67 +206,6 @@
             "schema": {
               "$ref": "#/definitions/apiUpdateResourceFieldsV1"
             }
-          }
-        ],
-        "tags": [
-          "OcpResourceApi"
-        ]
-      }
-    },
-    "/v1/resources/{resource_id}": {
-      "get": {
-        "summary": "Return description of resource by id",
-        "operationId": "OcpResourceApi_DescribeResourceV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiResourceV1"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "resource_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "OcpResourceApi"
-        ]
-      },
-      "delete": {
-        "operationId": "OcpResourceApi_RemoveResourceV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiRemoveResourceResponseV1"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "resource_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [

@@ -2,6 +2,7 @@ package flusher
 
 import (
 	"context"
+
 	"github.com/opentracing/opentracing-go"
 	"github.com/ozoncp/ocp-resource-api/internal/models"
 	"github.com/ozoncp/ocp-resource-api/internal/repo"
@@ -9,7 +10,7 @@ import (
 )
 
 type Flusher interface {
-	Flush(ctx context.Context, resources []models.Resource, span opentracing.Span) []models.Resource
+	Flush(ctx context.Context, resources []models.Resource) []models.Resource
 }
 
 type flusher struct {
@@ -28,10 +29,11 @@ func NewFlusher(
 	}
 }
 
-func (f *flusher) Flush(ctx context.Context, resources []models.Resource, parentSpan opentracing.Span) []models.Resource {
+func (f *flusher) Flush(ctx context.Context, resources []models.Resource) []models.Resource {
 	var span opentracing.Span
-	if parentSpan != nil {
+	if parentSpan := opentracing.SpanFromContext(ctx); parentSpan != nil {
 		span = opentracing.GlobalTracer().StartSpan("Flush", opentracing.ChildOf(parentSpan.Context()))
+		ctx = opentracing.ContextWithSpan(ctx, span)
 		defer span.Finish()
 	}
 
@@ -49,7 +51,7 @@ func (f *flusher) Flush(ctx context.Context, resources []models.Resource, parent
 
 	for i := range chunks {
 		chunk := chunks[i]
-		errAddEntities := f.resourceRepo.AddEntities(ctx, chunk, span)
+		errAddEntities := f.resourceRepo.AddEntities(ctx, chunk)
 		if errAddEntities != nil {
 			return resources[int(f.chunkSize)*i:]
 		}

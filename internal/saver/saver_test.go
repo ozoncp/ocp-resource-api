@@ -2,13 +2,14 @@ package saver_test
 
 import (
 	"context"
+	"time"
+
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 	"github.com/ozoncp/ocp-resource-api/internal/mocks"
 	"github.com/ozoncp/ocp-resource-api/internal/models"
 	s "github.com/ozoncp/ocp-resource-api/internal/saver"
-	"time"
 )
 
 var _ = Describe("Saver", func() {
@@ -42,9 +43,9 @@ var _ = Describe("Saver", func() {
 
 		It("Flush several times", func() {
 			saver.Init()
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args[0:2]), nil).Times(1)
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args[2:]), nil).Times(1)
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq([]models.Resource{}), nil)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args[0:2])).Times(1)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args[2:])).Times(1)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq([]models.Resource{}))
 			for _, res := range args[0:2] {
 				saver.Save(res)
 			}
@@ -58,8 +59,8 @@ var _ = Describe("Saver", func() {
 
 		It("Flush once", func() {
 			saver.Init()
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args), nil).Times(1)
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq([]models.Resource{}), nil)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args)).Times(1)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq([]models.Resource{}))
 			for _, res := range args {
 				saver.Save(res)
 			}
@@ -69,7 +70,7 @@ var _ = Describe("Saver", func() {
 
 		It("Flush failed", func() {
 			saver.Init()
-			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args), nil).Return(args).Times(2)
+			mockFlusher.EXPECT().Flush(ctx, gomock.Eq(args)).Return(args).Times(2)
 			for _, res := range args {
 				saver.Save(res)
 			}
@@ -78,7 +79,7 @@ var _ = Describe("Saver", func() {
 		})
 
 		It("Close twice", func() {
-			mockFlusher.EXPECT().Flush(ctx, gomock.Any(), nil).Times(1).Return([]models.Resource{})
+			mockFlusher.EXPECT().Flush(ctx, gomock.Any()).Times(1).Return([]models.Resource{})
 			defer GinkgoRecover()
 			saver.Init()
 			saver.Close()
@@ -86,7 +87,7 @@ var _ = Describe("Saver", func() {
 		})
 
 		It("Save after close", func() {
-			mockFlusher.EXPECT().Flush(ctx, gomock.Any(), nil).Times(1).Return([]models.Resource{})
+			mockFlusher.EXPECT().Flush(ctx, gomock.Any()).Times(1).Return([]models.Resource{})
 			defer GinkgoRecover()
 			saver.Init()
 			saver.Close()

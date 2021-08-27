@@ -3,9 +3,13 @@ package main
 import (
 	"context"
 	"flag"
+	"net"
+	"net/http"
+	"os"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/opentracing/opentracing-go"
-	api "github.com/ozoncp/ocp-resource-api/internal/api"
+	"github.com/ozoncp/ocp-resource-api/internal/api"
 	"github.com/ozoncp/ocp-resource-api/internal/metrics"
 	"github.com/ozoncp/ocp-resource-api/internal/producer"
 	"github.com/ozoncp/ocp-resource-api/internal/repo"
@@ -14,9 +18,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
-	"net"
-	"net/http"
-	"os"
 )
 
 const (
