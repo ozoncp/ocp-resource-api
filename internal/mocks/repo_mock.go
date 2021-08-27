@@ -9,7 +9,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	opentracing "github.com/opentracing/opentracing-go"
 	models "github.com/ozoncp/ocp-resource-api/internal/models"
 )
 
@@ -37,17 +36,17 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 }
 
 // AddEntities mocks base method.
-func (m *MockRepo) AddEntities(arg0 context.Context, arg1 []models.Resource, arg2 opentracing.Span) error {
+func (m *MockRepo) AddEntities(arg0 context.Context, arg1 []models.Resource) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddEntities", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "AddEntities", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddEntities indicates an expected call of AddEntities.
-func (mr *MockRepoMockRecorder) AddEntities(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockRepoMockRecorder) AddEntities(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEntities", reflect.TypeOf((*MockRepo)(nil).AddEntities), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEntities", reflect.TypeOf((*MockRepo)(nil).AddEntities), arg0, arg1)
 }
 
 // AddEntity mocks base method.
@@ -81,10 +80,10 @@ func (mr *MockRepoMockRecorder) DescribeEntity(arg0, arg1 interface{}) *gomock.C
 }
 
 // ListEntities mocks base method.
-func (m *MockRepo) ListEntities(arg0 context.Context, arg1, arg2 uint64) (*[]models.Resource, error) {
+func (m *MockRepo) ListEntities(arg0 context.Context, arg1, arg2 uint64) ([]models.Resource, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListEntities", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*[]models.Resource)
+	ret0, _ := ret[0].([]models.Resource)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

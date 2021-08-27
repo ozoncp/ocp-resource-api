@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/ozoncp/ocp-resource-api/internal/models"
 )
 

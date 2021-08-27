@@ -2,8 +2,9 @@ package utils
 
 import (
 	"errors"
-	"github.com/ozoncp/ocp-resource-api/internal/models"
 	"testing"
+
+	"github.com/ozoncp/ocp-resource-api/internal/models"
 )
 
 func equalsNilValues(a interface{}, b interface{}) bool {

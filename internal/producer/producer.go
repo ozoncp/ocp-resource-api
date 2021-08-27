@@ -2,9 +2,9 @@ package producer
 
 import (
 	"encoding/json"
+
 	"github.com/Shopify/sarama"
 	"github.com/rs/zerolog/log"
-	"time"
 )
 
 type Producer interface {
@@ -34,7 +34,6 @@ func (p *producer) prepareMessage(bytes []byte) *sarama.ProducerMessage {
 		Key:       sarama.StringEncoder(p.topic),
 		Value:     sarama.StringEncoder(bytes),
 		Partition: -1,
-		Timestamp: time.Time{},
 	}
 	return encodedMessage
 }

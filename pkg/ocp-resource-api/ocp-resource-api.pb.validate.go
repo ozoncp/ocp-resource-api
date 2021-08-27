@@ -261,7 +261,7 @@ func (m *DescribeResourceRequestV1) Validate() error {
 		return nil
 	}
 
-	// no validation rules for ResourceId
+	// no validation rules for Id
 
 	return nil
 }
@@ -483,7 +483,7 @@ func (m *RemoveResourceRequestV1) Validate() error {
 		return nil
 	}
 
-	// no validation rules for ResourceId
+	// no validation rules for Id
 
 	return nil
 }

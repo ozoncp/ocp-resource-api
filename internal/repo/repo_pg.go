@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -64,7 +65,8 @@ func (r *repoPostgreSQL) AddEntity(ctx context.Context, entity models.Resource) 
 	if err != nil {
 		return nil, err
 	}
-	id := uint64(0)
+
+	var id uint64
 	err = conn.QueryRow(ctx, sql, entity.UserId, entity.Type, entity.Status).Scan(&id)
 	if err != nil {
 		return nil, err
@@ -72,8 +74,8 @@ func (r *repoPostgreSQL) AddEntity(ctx context.Context, entity models.Resource) 
 	return r.DescribeEntity(ctx, id)
 }
 
-func (r *repoPostgreSQL) AddEntities(ctx context.Context, entities []models.Resource,
-	parentSpan opentracing.Span) error {
+func (r *repoPostgreSQL) AddEntities(ctx context.Context, entities []models.Resource) error {
+	parentSpan := opentracing.SpanFromContext(ctx)
 	if parentSpan != nil {
 		span := opentracing.GlobalTracer().StartSpan("AddEntities", opentracing.ChildOf(parentSpan.Context()))
 		defer span.Finish()
@@ -113,7 +115,7 @@ func prepareResourceInsertQuery(entity models.Resource) (string, error) {
 	return fmt.Sprintf("%s RETURNING id", sql), nil
 }
 
-func (r *repoPostgreSQL) ListEntities(ctx context.Context, limit uint64, offset uint64) (*[]models.Resource, error) {
+func (r *repoPostgreSQL) ListEntities(ctx context.Context, limit uint64, offset uint64) ([]models.Resource, error) {
 	conn, err := r.getConnection()
 	if err != nil {
 		return nil, err
@@ -144,7 +146,7 @@ func (r *repoPostgreSQL) ListEntities(ctx context.Context, limit uint64, offset 
 
 		result = append(result, resource)
 	}
-	return &result, nil
+	return result, nil
 }
 
 func (r *repoPostgreSQL) DescribeEntity(ctx context.Context, entityId uint64) (*models.Resource, error) {
